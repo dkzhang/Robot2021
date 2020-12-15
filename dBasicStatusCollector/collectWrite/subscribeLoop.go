@@ -110,7 +110,7 @@ func SubscribeResponseParse(theRedis *redisOps.Redis, result string) error {
 			if err != nil {
 				return fmt.Errorf("robotStatus.UnmarshalJSON error: %v", err)
 			} else {
-				robotStatus.TimeStamp = myUtil.FormatTime(time.Now())
+				robotStatus.TimeStamp = myUtil.Format(time.Now())
 				//write to redis
 				theRedis.ListMaxLenRPush("RobotStatus", robotStatus, 256)
 			}

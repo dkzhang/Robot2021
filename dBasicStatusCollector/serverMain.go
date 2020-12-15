@@ -25,7 +25,7 @@ func main() {
 	}
 	s := grpc.NewServer()
 	pb.RegisterRobotStatusServiceServer(s, &server.BasicStatusServer{})
-	fmt.Printf("Begin to serve %s", myUtil.FormatTime(time.Now()))
+	fmt.Printf("Begin to serve %s", myUtil.Format(time.Now()))
 	if err := s.Serve(lis); err != nil {
 		log.Printf(" fatal error! failed to serve: %v", err)
 	}

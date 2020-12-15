@@ -1,13 +1,13 @@
 package client
 
 import (
-	"Robot2019/myUtil"
+	"Robot2021/myUtils/formatTime"
 	"context"
 	"fmt"
 	"log"
 	"time"
 
-	pb "Robot2019/dataServer/robotStatusServer/grpc"
+	pb "Robot2021/dBasicStatusCollector/grpc"
 	"google.golang.org/grpc"
 )
 
@@ -32,7 +32,7 @@ func GetRobotStatus() (reply *pb.RobotStatusReply, err error) {
 	defer cancel()
 
 	r, err := c.GetRobotStatus(ctx, &pb.RobotStatusRequest{
-		Tag: myUtil.FormatTime(time.Now()),
+		Tag: formatTime.Format(time.Now()),
 	})
 
 	if err != nil {
