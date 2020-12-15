@@ -1,10 +1,11 @@
 package collectWrite
 
 import (
-	"Robot2019/cache"
-	"Robot2019/chassisDriverForRobot/common"
-	"Robot2019/chassisDriverForRobot/socketCommunication"
-	"Robot2019/myUtil"
+	"Robot2021/chassisDriver/common"
+	"Robot2021/chassisDriver/socketCommunication"
+	"Robot2021/databaseCommon/redisOps"
+	myUtil "Robot2021/myUtils/formatTime"
+	"Robot2021/myUtils/splitJSON"
 	"fmt"
 	"log"
 	"time"
@@ -26,16 +27,16 @@ func SubscribeLoop() {
 	cmdSubscribeFlag := false
 	var err error
 
-	opts := &cache.RedisOpts{
-		Host: cache.RedisHost,
+	opts := &redisOps.RedisOpts{
+		Host: redisOps.RedisHost,
 	}
-	theRedis := cache.NewRedis(opts)
+	theRedis := redisOps.NewRedis(opts)
 
 	for {
 		select {
 		case strResult := <-psm.ResultChan:
 
-			for _, strJSON := range myUtil.SplitJSON(strResult) {
+			for _, strJSON := range splitJSON.Split(strResult) {
 
 				if cmdSubscribeFlag == false {
 					//命令解析
@@ -94,7 +95,7 @@ func CmdResponseParse(result string, name, uuid string) (bool, error) {
 // 如果收到的不是callback消息订阅，或者不是robot_status主题，或者运动没有完成，返回false
 // 如果是对应的响应报文，且指示移动命令已完成，返回true
 // 如果出错，由于订阅消息的可重复性，直接忽略，返回false
-func SubscribeResponseParse(theRedis *cache.Redis, result string) error {
+func SubscribeResponseParse(theRedis *redisOps.Redis, result string) error {
 
 	pct, err := common.CallbackTopicDetection(result, "robot_status")
 

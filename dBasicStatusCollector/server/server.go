@@ -1,9 +1,9 @@
 package server
 
 import (
-	"Robot2019/cache"
-	robotStatusWriter "Robot2019/chassisDriverForRobot/subscribeRobotStatusWriter/server"
-	pb "Robot2019/dataServer/robotStatusServer/grpc"
+	"Robot2021/dBasicStatusCollector/collectWrite"
+	pb "Robot2021/dBasicStatusCollector/grpc"
+	"Robot2021/databaseCommon/redisOps"
 	"context"
 	"encoding/json"
 	"fmt"
@@ -17,17 +17,17 @@ type BasicStatusServer struct {
 func (s *BasicStatusServer) GetRobotStatus(ctx context.Context, in *pb.RobotStatusRequest) (*pb.RobotStatusReply, error) {
 	log.Printf("Received: %v", in.GetTag())
 
-	opts := &cache.RedisOpts{
-		Host: cache.RedisHost,
+	opts := &redisOps.RedisOpts{
+		Host: redisOps.RedisHost,
 	}
-	theRedis := cache.NewRedis(opts)
+	theRedis := redisOps.NewRedis(opts)
 
 	result, err := theRedis.ListIndex("RobotStatus", -1)
 	if err != nil {
 		return nil, fmt.Errorf("theRedis.ListIndex: %v", err)
 	}
 
-	robotStatus := robotStatusWriter.RobotStatusTopic{}
+	robotStatus := collectWrite.RobotStatusTopic{}
 	err = json.Unmarshal([]byte(result), &robotStatus)
 	if err != nil {
 		return nil, fmt.Errorf("json.Unmarshal error: %v", err)
