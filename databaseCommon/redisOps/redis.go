@@ -2,7 +2,6 @@ package redisOps
 
 import (
 	"encoding/json"
-	"log"
 	"time"
 
 	"github.com/gomodule/redigo/redis"
@@ -65,7 +64,7 @@ func (r *Redis) Get(key string) interface{} {
 }
 
 //Set 设置一个值
-func (r *Redis) Set(key string, val interface{}, timeout time.Duration) (err error) {
+func (r *Redis) SetEX(key string, val interface{}, timeout time.Duration) (err error) {
 	conn := r.conn.Get()
 	defer conn.Close()
 
@@ -79,18 +78,31 @@ func (r *Redis) Set(key string, val interface{}, timeout time.Duration) (err err
 	return
 }
 
+func (r *Redis) Set(key string, val interface{}, timeout time.Duration) (err error) {
+	conn := r.conn.Get()
+	defer conn.Close()
+
+	var data []byte
+	if data, err = json.Marshal(val); err != nil {
+		return
+	}
+
+	_, err = conn.Do("SET", key, data)
+
+	return
+}
+
 //IsExist 判断key是否存在
 func (r *Redis) IsExist(key string) bool {
 	conn := r.conn.Get()
 	defer conn.Close()
 
-	exists, err := redis.Bool(conn.Do("EXISTS", key))
-	if err != nil {
-		// handle error return from c.Do or type conversion error.
-		log.Printf("redis.Bool error: %v", err)
-		return false
+	a, _ := conn.Do("EXISTS", key)
+	i := a.(int64)
+	if i > 0 {
+		return true
 	}
-	return exists
+	return false
 }
 
 //Delete 删除
@@ -103,6 +115,69 @@ func (r *Redis) Delete(key string) error {
 	}
 
 	return nil
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+func (r *Redis) ListRPush(key string, val interface{}) (err error) {
+	conn := r.conn.Get()
+	defer conn.Close()
+
+	var data []byte
+	if data, err = json.Marshal(val); err != nil {
+		return
+	}
+
+	_, err = conn.Do("RPUSH", key, data)
+
+	return
+}
+
+func (r *Redis) ListMaxLenRPush(key string, val interface{}, maxLen int) (err error) {
+	conn := r.conn.Get()
+	defer conn.Close()
+
+	//RPush
+	var data []byte
+	if data, err = json.Marshal(val); err != nil {
+		return err
+	}
+
+	if length, err := redis.Int(conn.Do("RPUSH", key, data)); err != nil {
+		return err
+	} else {
+		//check length
+		if length > maxLen {
+			//从右向左保留，删除左边多余的元素
+			_, err = conn.Do("LTRIM", key, -maxLen, -1)
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (r *Redis) ListLRange(key string, start, end int) (strArray []string, err error) {
+	conn := r.conn.Get()
+	defer conn.Close()
+
+	strArray, err = redis.Strings(conn.Do("LRANGE", key, start, end))
+	return strArray, err
+}
+
+func (r *Redis) ListIndex(key string, index int) (item string, err error) {
+	conn := r.conn.Get()
+	defer conn.Close()
+
+	item, err = redis.String(conn.Do("LINDEX", key, index))
+	return item, err
+}
+
+func (r *Redis) ListLen(key string) (length int, err error) {
+	conn := r.conn.Get()
+	defer conn.Close()
+
+	length, err = redis.Int(conn.Do("LLEN", key))
+	return length, err
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
