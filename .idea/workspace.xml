@@ -1,20 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="26501245-f145-4049-94d2-a0310e379603" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/chassisDriver/common/callbackStructure.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/chassisDriver/common/commanResponse.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/myUtils/dkLog/dkLog.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/myUtils/dkLog/logToFile.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/myUtils/formatTime/formatTime.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/myUtils/splitJSON/splitJSON.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dBasicStatusCollector/collectWrite/robotStatusWriterForever.go" beforeDir="false" afterPath="$PROJECT_DIR$/dBasicStatusCollector/collectWrite/subscribeLoop.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dBasicStatusCollector/server/server.go" beforeDir="false" afterPath="$PROJECT_DIR$/dBasicStatusCollector/server/server.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dBasicStatusCollector/serverMain.go" beforeDir="false" afterPath="$PROJECT_DIR$/dBasicStatusCollector/serverMain.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/go.mod" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/go.sum" afterDir="false" />
-    </list>
+    <list default="true" id="26501245-f145-4049-94d2-a0310e379603" name="Default Changelist" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
